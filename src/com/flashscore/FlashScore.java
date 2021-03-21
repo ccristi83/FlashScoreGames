@@ -254,8 +254,8 @@ public class FlashScore {
 
 //        page.allGamesList.forEach(game -> System.out.println(game.getResultedScore() + " " + game.getTeamHome() + " " + game.getTeamAway()));
 
-        //filter games - get the ones having score > 8
-        List<PageGameFotball> lista_ord_fotball_score = page.allGamesListFotball.stream().sorted(Comparator.comparingInt(PageGameFotball::getResultedScore)).filter(o->o.getResultedScore()>8).collect(Collectors.toList());
+        //filter games - get the ones having score > 8 and last3Fav > 8
+        List<PageGameFotball> lista_ord_fotball_score = page.allGamesListFotball.stream().sorted(Comparator.comparingInt(PageGameFotball::getResultedScore)).filter(o->o.getResultedScore()>8 && o.getFavLast3()>8).collect(Collectors.toList());
 
         //filter games by goals on last games
         List<PageGameFotball> lista_ord_goals_max = page.allGamesListFotball.stream().sorted(Comparator.comparingInt(PageGameFotball::getScoreGoals)).filter(o->o.getScoreGoals()>23).collect(Collectors.toList());
@@ -310,8 +310,8 @@ public class FlashScore {
             page.allGamesListHockey.addAll(games);
         }
 
-        //filter games - get the ones having score > 8
-        List<PageGameHockey> lista_ord_hochey_score = page.allGamesListHockey.stream().sorted(Comparator.comparingInt(PageGameHockey::getResultedScore)).filter(o->o.getResultedScore()>8).collect(Collectors.toList());
+        //filter games - get the ones having score > 8 and last3Fav > 8
+        List<PageGameHockey> lista_ord_hochey_score = page.allGamesListHockey.stream().sorted(Comparator.comparingInt(PageGameHockey::getResultedScore)).filter(o->o.getResultedScore()>8 && o.getFavLast3()>8).collect(Collectors.toList());
 //        List<PageGameHockey> lista_ord_hochey_score = page.allGamesListHockey.stream().sorted(Comparator.comparingInt(PageGameHockey::getResultedScore)).filter(o->o.getResultedScore()>3).collect(Collectors.toList());
 
         page.processOddsHockey(lista_ord_hochey_score);
@@ -334,11 +334,9 @@ public class FlashScore {
 
         Mail mail = new Mail();
         mail.sendMail("Flashscore Games " + day,
-                String.valueOf(printGamesFotball(lista_ord_fotball_score, "Lista meciuri fotbal: ")) +
-                String.valueOf(printGamesHockey(lista_ord_hochey_score, "Lista meciuri hochey: ")) +
-                        String.valueOf(printGamesGoals(lista_equals_games, "Lista meciuri egale", 5))+
-                        String.valueOf(printGamesGoals(lista_ord_goals_min, "Lista meciuri nr goluri min", 10))+
-                        String.valueOf(printGamesGoals(lista_ord_goals_max, "Lista meciuri nr goluri max", 10)));
+                String.valueOf(printGamesFotball(lista_ord_fotball_score, String.format("Lista meciuri fotbal: (din total %s)", page.allGamesListFotball.size()))) +
+                        String.valueOf(printGamesHockey(lista_ord_hochey_score, String.format("Lista meciuri hockey: (din total %s)", page.allGamesListHockey.size()))) +
+                        String.valueOf(printGamesGoals(lista_equals_games, "Lista meciuri egale", 10)));
 
 //        mail.sendMail("Flashscore Games " + day, String.valueOf(printGamesHockey(lista_ord_hochey_score, "Lista meciuri hochey: ")));
 
