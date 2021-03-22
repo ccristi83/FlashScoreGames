@@ -175,7 +175,7 @@ public class FlashScore {
     }
 
 
-    private static StringBuffer printGamesGoals(List<PageGameFotball> games, String msg, int no_games) {
+    private static StringBuffer printGamesEquals(List<PageGameFotball> games, String msg, int no_games) {
 
         StringBuffer tmp = new StringBuffer();
         tmp.append("\n ===" + msg + "===");
@@ -189,7 +189,7 @@ public class FlashScore {
 
         for(PageGameFotball g:games)
         {
-            tmp.append("\n" + g.printGameGoals());
+            tmp.append("\n" + g.printGameEqualGames());
         }
         tmp.append("\n================================\n\n");
         return tmp;
@@ -336,7 +336,7 @@ public class FlashScore {
         mail.sendMail("Flashscore Games " + day,
                 String.valueOf(printGamesFotball(lista_ord_fotball_score, String.format("Lista meciuri fotbal: (din total %s)", page.allGamesListFotball.size()))) +
                         String.valueOf(printGamesHockey(lista_ord_hochey_score, String.format("Lista meciuri hockey: (din total %s)", page.allGamesListHockey.size()))) +
-                        String.valueOf(printGamesGoals(lista_equals_games, "Lista meciuri egale", 10)));
+                        String.valueOf(printGamesEquals(lista_equals_games, "Lista meciuri egale", 10)));
 
 //        mail.sendMail("Flashscore Games " + day, String.valueOf(printGamesHockey(lista_ord_hochey_score, "Lista meciuri hochey: ")));
 

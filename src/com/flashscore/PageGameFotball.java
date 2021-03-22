@@ -305,10 +305,10 @@ public class PageGameFotball implements PageGame{
         return printed_game;
     }
 
-    public String printGameGoals()
+    public String printGameEqualGames()
     {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        String printed_game = dateFormat.format(getDate_hour()) + " :: Goals: " + getScoreGoals()+ " :: "
+        String printed_game = dateFormat.format(getDate_hour()) + " :: Eq.games: " + getEqualGames()+ " :: "
                 + " " + getTeamHome() + "- " + getTeamAway() + " :: " + getCampionship();
         System.out.println(printed_game);
         return printed_game;
