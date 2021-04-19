@@ -171,7 +171,9 @@ public class PageGameFotball implements PageGame{
         if (homeTeamGames.contains("No match found")||awayTeamGames.contains("No match found")) {
             setScore_teamHome(0);
             setScore_teamAway(0);
-            setResultedScore(0); }
+            setResultedScore(0);
+            setFilter_out(true);
+        }
         else
         {
             //process home team games
@@ -200,10 +202,10 @@ public class PageGameFotball implements PageGame{
         if (!filter_out)
         {
             System.out.println("home");
-            int goalsHome = getGoalsNo(homeTeamGames, 3);
+            int goalsHome = getGoalsNo(homeTeamGames, 5);
 
             System.out.println("away");
-            int goalAway = getGoalsNo(awayTeamGames, 3);
+            int goalAway = getGoalsNo(awayTeamGames, 5);
 
             System.out.println("h2h");
             int goalsH2h = getGoalsNo(h2hTeamGames, 3);
@@ -255,10 +257,10 @@ public class PageGameFotball implements PageGame{
         List<String> results = Arrays.asList(goals);
         results = results.stream().filter(o -> o.matches("\\d+\\s:\\s\\d+")).collect(Collectors.toList());
 
-        if (results.size()>no_matches+1)
+        if (results.size()>=no_matches)
         {
             String lastChars;
-            for (int i=1; i<results.size()-1; i++) {
+            for (int i=0; i<results.size(); i++) {
                 lastChars = results.get(i);
                 System.out.println(lastChars);
                 String[] score = lastChars.split(":");
@@ -268,6 +270,7 @@ public class PageGameFotball implements PageGame{
                 if (score[0].toString().trim().equals(score[1].toString().trim())) increaseEqualGames();
             }
         }
+        else setFilter_out(true);
         return noGoals;
     }
 

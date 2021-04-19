@@ -251,8 +251,8 @@ public class FlashScore {
 //        all_links.add("https://www.flashscore.com/match/fm1YgaAs/#h2h;overal");
 //        int no_games = all_links.size();
 
-//        all_links =all_links.subList(0,15);
-//        no_games = 15;
+//        all_links =all_links.subList(0,10);
+//        no_games = 10;
 
         //get chunks of links from of max_process_no
         if (no_games < max_process_no)
@@ -270,8 +270,6 @@ public class FlashScore {
             List<PageGameFotball> games = processLinksFotball(all_links.subList(max_process_no*lopp, no_games));
             page.allGamesListFotball.addAll(games);
         }
-
-//        page.allGamesList.forEach(game -> System.out.println(game.getResultedScore() + " " + game.getTeamHome() + " " + game.getTeamAway()));
 
         //filter games - get the ones having score > 8 and last3Fav > 8
         List<PageGameFotball> lista_ord_fotball_score = page.allGamesListFotball.stream().sorted(Comparator.comparingInt(PageGameFotball::getResultedScore)).filter(o->o.getResultedScore()>8 && o.getFavLast3()>8).collect(Collectors.toList());

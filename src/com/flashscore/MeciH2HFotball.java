@@ -11,8 +11,8 @@ public class MeciH2HFotball {
     private WebDriver driver;
     public String GAME_URL;
 
-    private String replacerH2H = "#h2h;overal";
-    private String replacerOdds = "#odds-comparison;1x2-odds;full-time";
+    private String replacerH2H = "#h2h/overall";
+    private String replacerOdds = "#odds-comparison/1x2-odds/full-time";
 
     public MeciH2HFotball(WebDriver driver, String URL)
     {
@@ -34,10 +34,10 @@ public class MeciH2HFotball {
 
         game_page.setLinkOdds(link_odd);
 
-        List<WebElement> h2hElements = driver.findElements(By.className("h2h-wrapper"));
-        WebElement championship = driver.findElement(By.className("description"));
-        WebElement teams = driver.findElement(By.className("h2h-submenu"));
-
+        List<WebElement> h2hElements = driver.findElements(By.className("h2h___1pnzCTL"));
+        WebElement championship = driver.findElement(By.className("description___3_uvNAG"));
+        WebElement teams = driver.findElement(By.className("subTabs"));
+        WebElement startTime = driver.findElement(By.className("startTime___2oy0czV"));
         try {
             game_page.processTeams(teams.getText());
         } catch (Exception e)
@@ -46,7 +46,7 @@ public class MeciH2HFotball {
         }
 
         try {
-            game_page.processChampionshipString(championship.getText().toString());
+            game_page.processChampionshipString(championship.getText().toString(), startTime.getText().toString());
         } catch (Exception e)
         {
             System.out.println("Could not process championship name; Fail at URL : " + GAME_URL);
@@ -64,19 +64,16 @@ public class MeciH2HFotball {
         driver.get(link_odds);
         Thread.sleep(2000);
         String [] odds1x2 = new String[3];
+        //String [] odds1x2 = null;
         try {
-            WebElement odds = driver.findElement(By.id("tab-match-odds-comparison"));
-
-            WebElement odds6 = driver.findElement(By.className("odd"));
-            odds1x2 = odds6.getText().toString().split("\n");
+            WebElement oddsTable = driver.findElement(By.className("tableWrapper___33yhdWE"));
+            WebElement oddsRow = driver.findElement(By.className("row___1rtP1QI"));
+            odds1x2 = oddsRow.getText().toString().split("\n");
         } catch (Exception e)
         {
-            System.out.println("Could not process odds; Fail at URL : " + GAME_URL);
-
+            System.out.println("Could not process odds; Fail at URL : " + link_odds);
+            odds1x2 = new String[]{"n/a", "n/a", "n/a"};
         }
-        //if odd is not present set n/a
-        if (odds1x2.length !=3) odds1x2 = new String[]{"n/a", "n/a", "n/a"};
-
         return odds1x2;
     }
 

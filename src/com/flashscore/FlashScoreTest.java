@@ -227,28 +227,18 @@ public class FlashScoreTest {
         if (args[0].contains("tomorrow")) day = day_Tommorow;
 
         //---FOOTBALL--
-        int no_games = page.getAllGamesLinks(day,BASE_URL);
-        List<String> all_links = page.getLinksformWebElements(0,no_games, sport_Fotball);
+//        int no_games = page.getAllGamesLinks(day,BASE_URL);
+//        List<String> all_links = page.getLinksformWebElements(0,no_games, sport_Fotball);
 
-//        List<String> all_links = new ArrayList<>();
-//        all_links.add("https://www.flashscore.com/match/GWECBOyp/#h2h/overall");
-//        all_links.add("https://www.flashscore.com/match/WrTsMYO4/#h2h/overall");
-//
-//        all_links.add("https://www.flashscore.com/match/AmyRuYsO/#h2h/overall");
-//        all_links.add("https://www.flashscore.com/match/bFhh0FQp/#h2h/overall");
-//        all_links.add("https://www.flashscore.com/match/OjyTr5Ra/#h2h/overall");
-//        all_links.add("https://www.flashscore.com/match/29UFusAE/#h2h;overall");
-//        all_links.add("https://www.flashscore.com/match/42jw0Hhp/#h2h;overall");
-//
-//        all_links.add("https://www.flashscore.com/match/Sv2JOGWt/#h2h;overall");
-//        all_links.add("https://www.flashscore.com/match/8tIYcoy8/#h2h;overall");
-//        all_links.add("https://www.flashscore.com/match/42jw0Hhp/#h2h;overall");
-//        all_links.add("https://www.flashscore.com/match/G0Iqozh0/#h2h;overall");
-//        all_links.add("https://www.flashscore.com/match/KlZ0nuc0/#h2h;overall");
-//        all_links.add("https://www.flashscore.com/match/lpuz17bf/#h2h;overall");
-//        all_links.add("https://www.flashscore.com/match/ddBmUx9J/#h2h;overall");
-//        all_links.add("https://www.flashscore.com/match/YqLn72AF/#h2h;overal");
-//        all_links.add("https://www.flashscore.com/match/fm1YgaAs/#h2h;overal");
+        List<String> all_links = new ArrayList<>();
+        all_links.add("https://www.flashscore.com/match/dISlJAMi/#h2h/overall");
+        all_links.add("https://www.flashscore.com/match/04QyJKq0/#h2h/overall");
+        all_links.add("https://www.flashscore.com/match/4fnqTj7H/#h2h/overall");
+
+
+
+        int no_games = all_links.size();
+
 //        int no_games = all_links.size();
 
 //        all_links =all_links.subList(0,5);
@@ -272,6 +262,8 @@ public class FlashScoreTest {
         }
 
 //        page.allGamesList.forEach(game -> System.out.println(game.getResultedScore() + " " + game.getTeamHome() + " " + game.getTeamAway()));
+        //remove filtered out games
+        //page.allGamesListFotball = page.allGamesListFotball.stream().filter(o->!o.isFilter_out()).collect(Collectors.toList());
 
         //filter games - get the ones having score > 8 and last3Fav > 8
         List<PageGameFotball> lista_ord_fotball_score = page.allGamesListFotball.stream().sorted(Comparator.comparingInt(PageGameFotball::getResultedScore)).filter(o->o.getResultedScore()>8 && o.getFavLast3()>8).collect(Collectors.toList());
