@@ -145,13 +145,13 @@ public class PageGameFotball implements PageGame{
         this.setTeamHome(text[1].replace("- Home", ""));
         this.setTeamAway(text[2].replace("- Away", ""));
     }
-    public void processChampionshipString(String champString) throws ParseException {
-        String[] ev = champString.split("\n");
-        if (ev[0].contains("Round")) {ev[0] = ev[0].substring(0, ev[0].indexOf("Round")-2);}
-        this.setCampionship(ev[0]);
+    public void processChampionshipString(String champString, String time) throws ParseException {
+        String str = champString.replace("FootballFootball", "");
+        if (str.contains("Round")) {str = str.substring(0, str.indexOf("Round")-2);}
+        this.setCampionship(str);
         // filter out Women championship
-        if (ev[0].toString().contains("Women")) {setFilter_out(true);}
-        this.setDate_hour(getDateHourfromString(ev[1]));
+        if (str.contains("Women")) {setFilter_out(true);}
+        this.setDate_hour(getDateHourfromString(time));
     }
 
     private Date getDateHourfromString(String dayhourString) throws ParseException {
@@ -162,10 +162,11 @@ public class PageGameFotball implements PageGame{
 
     public void processH2HString (List<WebElement> h2hString)
     {
-        String homeTeamGames = h2hString.get(LAST_MATCHES_TEAM_HOME).getText();
-        String awayTeamGames = h2hString.get(LAST_MATCHES_TEAM_AWAY).getText();
-        String h2hTeamGames = h2hString.get(HAEAD_TOHEAD_MATCHES).getText();
 
+        String allGames = h2hString.get(0).getText();
+        String homeTeamGames = allGames.substring(0,allGames.lastIndexOf("Last matches:"));
+        String awayTeamGames = allGames.substring(allGames.lastIndexOf("Last matches:"), allGames.lastIndexOf("Head-to-head matches:"));
+        String h2hTeamGames = allGames.substring(allGames.lastIndexOf("Head-to-head matches:"), allGames.length());
 
         if (homeTeamGames.contains("No match found")||awayTeamGames.contains("No match found")) {
             setScore_teamHome(0);
@@ -205,7 +206,7 @@ public class PageGameFotball implements PageGame{
             int goalAway = getGoalsNo(awayTeamGames, 3);
 
             System.out.println("h2h");
-            int goalsH2h = getGoalsNo(h2hTeamGames, 1);
+            int goalsH2h = getGoalsNo(h2hTeamGames, 3);
             setScoreGoals(goalsHome+goalAway+goalsH2h);
             System.out.println("+++scored goals"+getScoreGoals());
         }
@@ -251,15 +252,14 @@ public class PageGameFotball implements PageGame{
     {
         int noGoals = 0;
         String [] goals = gameDetails.split("\n");
-        //remove doble line result (especially for hochey)
-        List<String> removed_double_result = Arrays.asList(goals);
-        removed_double_result = removed_double_result.stream().filter(o -> o.length() > 7).collect(Collectors.toList());
+        List<String> results = Arrays.asList(goals);
+        results = results.stream().filter(o -> o.matches("\\d+\\s:\\s\\d+")).collect(Collectors.toList());
 
-        if (removed_double_result.size()>no_matches+1)
+        if (results.size()>no_matches+1)
         {
             String lastChars;
-            for (int i=1; i<removed_double_result.size()-1; i++) {
-                lastChars = removed_double_result.get(i).substring(removed_double_result.get(i).length() -6, removed_double_result.get(i).length()).trim();
+            for (int i=1; i<results.size()-1; i++) {
+                lastChars = results.get(i);
                 System.out.println(lastChars);
                 String[] score = lastChars.split(":");
                 noGoals = noGoals + Integer.valueOf(score[0].toString().trim());
@@ -309,6 +309,15 @@ public class PageGameFotball implements PageGame{
     {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         String printed_game = dateFormat.format(getDate_hour()) + " :: Eq.games: " + getEqualGames()+ " :: "
+                + " " + getTeamHome() + "- " + getTeamAway() + " :: " + getCampionship();
+        System.out.println(printed_game);
+        return printed_game;
+    }
+
+    public String printGameMinGames()
+    {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        String printed_game = dateFormat.format(getDate_hour()) + " :: Min.games: " + getScoreGoals()+ " :: "
                 + " " + getTeamHome() + "- " + getTeamAway() + " :: " + getCampionship();
         System.out.println(printed_game);
         return printed_game;

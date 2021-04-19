@@ -52,7 +52,7 @@ public class FlashScore {
             id = id.substring(id.lastIndexOf("_")+1, id.length());
             String newURl = String.format("https://www.flashscore.com/match/%s/#match-summary",id);
             newURl = newURl.replace("#match-summary", "");
-            if (sport == "fotball") newURl = newURl + "#h2h;overall";
+            if (sport == "fotball") newURl = newURl + "#h2h/overall";
             if (sport == "hockey") newURl = newURl + "#h2h/overall";
             linksURLGames.add(newURl);
         }
@@ -174,7 +174,6 @@ public class FlashScore {
         return tmp;
     }
 
-
     private static StringBuffer printGamesEquals(List<PageGameFotball> games, String msg, int no_games) {
 
         StringBuffer tmp = new StringBuffer();
@@ -190,6 +189,26 @@ public class FlashScore {
         for(PageGameFotball g:games)
         {
             tmp.append("\n" + g.printGameEqualGames());
+        }
+        tmp.append("\n================================\n\n");
+        return tmp;
+    }
+
+    private static StringBuffer printGamesMin(List<PageGameFotball> games, String msg, int no_games) {
+
+        StringBuffer tmp = new StringBuffer();
+        tmp.append("\n ===" + msg + "===");
+        System.out.println("\n  " + msg);
+
+        //if list size bigger than no_games, keep only last no_games
+        if(games.size()>=no_games)
+        {
+            games = games.subList(0, no_games);
+        }
+
+        for(PageGameFotball g:games)
+        {
+            tmp.append("\n" + g.printGameMinGames());
         }
         tmp.append("\n================================\n\n");
         return tmp;
@@ -260,10 +279,10 @@ public class FlashScore {
         //filter games by goals on last games
         List<PageGameFotball> lista_ord_goals_max = page.allGamesListFotball.stream().sorted(Comparator.comparingInt(PageGameFotball::getScoreGoals)).filter(o->o.getScoreGoals()>23).collect(Collectors.toList());
 
-        //get fisrt 5 games - the least goals scored
+        //get games by scored goals
         List<PageGameFotball> lista_ord_goals_min = page.allGamesListFotball.stream().sorted(Comparator.comparingInt(PageGameFotball::getScoreGoals)).collect(Collectors.toList());
 
-        //get first 5 games - with equals games
+        //get games - with equals games
         List<PageGameFotball> lista_equals_games = page.allGamesListFotball.stream().sorted(Comparator.comparingInt(PageGameFotball::getEqualGames)).collect(Collectors.toList());
 
 //        System.out.println("\n ++++++ Lista ord: ");
@@ -336,7 +355,9 @@ public class FlashScore {
         mail.sendMail("Flashscore Games " + day,
                 String.valueOf(printGamesFotball(lista_ord_fotball_score, String.format("Lista meciuri fotbal: (din total %s)", page.allGamesListFotball.size()))) +
                         String.valueOf(printGamesHockey(lista_ord_hochey_score, String.format("Lista meciuri hockey: (din total %s)", page.allGamesListHockey.size()))) +
-                        String.valueOf(printGamesEquals(lista_equals_games, "Lista meciuri egale", 10)));
+                        String.valueOf(printGamesEquals(lista_equals_games, "Lista meciuri egale", 6))+
+                        String.valueOf(printGamesMin(lista_ord_goals_min, "Lista meciuri nr goluri min", 10)));
+
 
 //        mail.sendMail("Flashscore Games " + day, String.valueOf(printGamesHockey(lista_ord_hochey_score, "Lista meciuri hochey: ")));
 

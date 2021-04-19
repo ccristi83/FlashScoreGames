@@ -34,6 +34,7 @@ public class MeciH2HHockey implements MeciH2H{
 
         PageGameHockey game_page = new PageGameHockey();
         game_page.setLinkOdds(GAME_URL.replace(replacerH2H,replacerOdds));
+
         List<WebElement> h2hElements = driver.findElements(By.className("section___1a1N7yN"));
         WebElement championship = driver.findElement(By.className("country___24Qe-aj"));
         WebElement championship_hour = driver.findElement(By.className("time___FaD-OOU"));
